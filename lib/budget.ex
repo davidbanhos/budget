@@ -5,16 +5,33 @@ defmodule Budget do
     File.read!("lib/transactions-jan.csv")
     |> parse
     |> filter
+    |> normalize
   end
 
   defp parse(string) do
-    CSV.parse_string(string)
+    string
+    |> String.replace("\r", "")
+    |> CSV.parse_string
   end
 
   defp filter(rows) do
     #Long sintaxe
     #Enum.map(rows, fn(row) -> Enum.drop(row , 1) end)
     Enum.map(rows, &Enum.drop(&1, 1))
+  end
+
+  defp normalize(rows) do
+    Enum.map(rows, &parse_amount(&1))
+  end
+
+  defp parse_amount([date, description, amount]) do
+    [date, description, parse_to_float(amount)]
+  end
+
+  defp parse_to_float(string) do
+    string
+    |> String.to_float
+    |> abs
   end
 
 end
