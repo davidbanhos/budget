@@ -1,6 +1,5 @@
 defmodule Budget do
-  def hello do
-    :world
+  def list_transactions do
+    "Listing transactions"
   end
-  
 end
